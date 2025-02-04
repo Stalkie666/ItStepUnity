@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "ItStepUnityUteryStarsi.sln"
+    "dotnet.defaultSolution": "ItStepUnity.sln"
 }
