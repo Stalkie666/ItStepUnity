@@ -9,6 +9,9 @@ public class PlayerMovement : MonoBehaviour
     private Animator anim;
     private SpriteRenderer sprite;
 
+    private enum MovementState{idle, running, jumping, falling}
+    private MovementState state = MovementState.idle;
+
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float jumpForce = 14f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -25,7 +28,7 @@ public class PlayerMovement : MonoBehaviour
         float dirX = Input.GetAxisRaw("Horizontal");
         rb.linearVelocity = new Vector2(dirX * moveSpeed, rb.linearVelocity.y);
         
-        // fixing multiple jumping
+        // fixing multiple jumping,  proble when i am in highest point, i can jump again, fix that
         if( Math.Abs(rb.linearVelocity.y) < .1f && Input.GetButtonDown("Jump") ){
             rb.linearVelocity = new Vector2(dirX * moveSpeed, jumpForce);
         }
@@ -35,15 +38,24 @@ public class PlayerMovement : MonoBehaviour
 
     private void UpdateAnimationMovement(float dirX){
         if( dirX > 0f ){
-            anim.SetBool("running",true);
+            state = MovementState.running;
             sprite.flipX = false;
         }
         else if( dirX < 0f ){
-            anim.SetBool("running",true);
+            state = MovementState.running;
             sprite.flipX = true;
         }
         else{
-            anim.SetBool("running",false);
+            state = MovementState.idle;
         }
+
+        if( rb.linearVelocity.y > .1f ){
+            state = MovementState.jumping;
+        }
+        else if(rb.linearVelocity.y < -.1f){
+            state = MovementState.falling;
+        }
+
+        anim.SetInteger("state",(int)state);
     }
 }
