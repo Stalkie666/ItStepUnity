@@ -17,6 +17,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float jumpForce = 14f;
     [SerializeField] private LayerMask jumpableGround;
+
+    [SerializeField] private AudioSource jumpSoundEffect;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
@@ -33,6 +36,7 @@ public class PlayerMovement : MonoBehaviour
         rb.linearVelocity = new Vector2(dirX * moveSpeed, rb.linearVelocity.y);
         
         if( Input.GetButtonDown("Jump") && IsGrounded() ){
+            jumpSoundEffect.Play();
             rb.linearVelocity = new Vector2(dirX * moveSpeed, jumpForce);
         }
         UpdateAnimationMovement(dirX);
